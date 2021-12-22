@@ -16,4 +16,9 @@ export class MuseumService {
     const getRequest: HttpRequest<any> = new HttpRequest('GET', AccountAPIUrls.GetAllDepartments);
     return this.httpClient.request(getRequest);
   }
+  
+  GetDepartmentById(query:string,departmentId:number): Observable<HttpEvent<Array<Department>>> {
+    const getRequest: HttpRequest<any> = new HttpRequest('GET', `${AccountAPIUrls.GetDepartmentById}?q=${query}&departmentId=${departmentId}&hasImages=true`);
+    return this.httpClient.request(getRequest);
+  }
 }

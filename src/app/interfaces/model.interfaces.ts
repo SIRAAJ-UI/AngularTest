@@ -1,5 +1,5 @@
 
 export interface Department {
-    departmentId: number | undefined;
-    displayName: string | undefined;
+    departmentId: number;
+    displayName: string;
 }
