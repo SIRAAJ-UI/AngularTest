@@ -1,4 +1,8 @@
+import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Department } from '../interfaces/model.interfaces';
+import { MuseumService } from '../museum.service';
 
 @Component({
   selector: 'app-museum-gallery',
@@ -7,9 +11,22 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MuseumGalleryComponent implements OnInit {
 
-  constructor() { }
+  public DepartmentList: Array<Department> = [];
+  constructor(private museumService: MuseumService) { }
 
   ngOnInit(): void {
+    const departments: Observable<HttpEvent<any>> = this.museumService.GetAllDepartments();
+    departments
+      .subscribe(data => {
+        if (data.type === HttpEventType.DownloadProgress) {
+        } else if (data.type === HttpEventType.Response) {
+          const { departments } = data.body;
+          this.DepartmentList = departments.splice(0, 3);
+        }
+      }, error => {
+        if (error.error instanceof ErrorEvent) {
+        }
+      })
   }
 
 }
