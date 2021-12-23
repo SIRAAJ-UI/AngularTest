@@ -7,7 +7,7 @@ import { MuseumService } from '../museum.service';
 @Component({
   selector: 'app-museum-gallery',
   templateUrl: './museum-gallery.component.html',
-  styleUrls: ['./museum-gallery.component.sass']
+  styleUrls: ['./museum-gallery.component.scss']
 })
 export class MuseumGalleryComponent implements OnInit {
 

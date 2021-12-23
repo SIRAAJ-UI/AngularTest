@@ -1,8 +1,17 @@
 <h4>{{Department.displayName}}</h4>
-{{ObjectIds.total}}
-<ng-container *ngFor="let id of ObjectIds.objectIDs">
-    <div class="card">
-        <div class="card-header">header</div>
-        <div class="card-body">{{id}}</div>
+<!-- <div *ngIf="isScrollable && isScrollableView" class="scroll-window-container">
+    <div role="button" class="scroll-left d-flex justify-content-center align-items-center" (click)="scrollLeft()">&#60;</div>
+    <div role="button" class="scroll-right d-flex justify-content-center align-items-center" (click)="scrollRight()">&#62;</div>
+</div> -->
+<button (click)="onPrevRecord()">Previous</button>
+<button (click)="onNextRecord()">Next</button>
+<div #widgetsContent class="d-flex">
+    <ng-container *ngFor="let record of Details" >
+        <div class="d-flex flex-column">
+        <div class="image-card mr-2">
+            <img [src]="record.primaryImageSmall" alt="">
+        </div>
+        <div>{{record.title}}</div>
     </div>
-</ng-container>
+    </ng-container>
+</div>

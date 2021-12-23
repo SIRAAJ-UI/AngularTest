@@ -6,6 +6,9 @@ import { AppComponent } from './app.component';
 import { ImageCardComponent } from './image-card/image-card.component';
 import { MuseumGalleryComponent } from './museum-gallery/museum-gallery.component';
 import { DepartmentComponent } from './department/department.component';
+import { LoadingBarRouterModule } from '@ngx-loading-bar/router';
+import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client';
+import { LOADING_BAR_CONFIG } from '@ngx-loading-bar/core';
 
 @NgModule({
   declarations: [
@@ -17,9 +20,14 @@ import { DepartmentComponent } from './department/department.component';
   imports: [
     BrowserModule,
     HttpClientModule,
+    LoadingBarRouterModule,
+    LoadingBarHttpClientModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [
+    { provide: LOADING_BAR_CONFIG, useValue: { latencyThreshold: 100 } },
+
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
