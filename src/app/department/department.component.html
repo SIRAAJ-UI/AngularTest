@@ -41,7 +41,8 @@
             </div>
         </div>
     </ng-container>
-    <div class="details-container d-flex justify-content-center">
+    <div *ngIf="NoDataAvailable">No Data Available.</div>
+    <div *ngIf="!NoDataAvailable" class="details-container d-flex justify-content-center">
         <ng-container *ngFor="let record of Details">
             <div class="d-flex flex-column">
                 <div class="image-card mr-2">

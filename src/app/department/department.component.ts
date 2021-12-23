@@ -1,6 +1,6 @@
 import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { Component, ElementRef, HostListener, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { forkJoin, Observable } from 'rxjs';
+import { forkJoin, Observable, Subject } from 'rxjs';
 import { Department, ObjectDetails, ObjectIds } from '../client/model';
 import { IObjectDetails } from '../interfaces/model.interfaces';
 import { MuseumService } from '../museum.service';
@@ -21,46 +21,81 @@ export class DepartmentComponent implements OnInit {
   public ObjectIds: any;
   public skipRows: number = 0;
   public takeRows: number = 6;
-  public TotalPageSize: number;
+  public TotalPageSize: number = 0;
   public page = 1;
   public Details: Array<IObjectDetails>;
   public loading: boolean = false;
+  public loading$:Subject<boolean>;
   public modalRef: BsModalRef;
   public previewDetails: IObjectDetails;
+  public Subscribes:any[] = [];
+  public IsNavButtonVisible: boolean = true;
+  public NoDataAvailable: boolean = false;
+  public imageHolder: Array<number> = [1, 2, 3, 4, 5, 6]
   @HostListener('mouseover') onHover() {
-    this.IsNavButtonVisible = false;
+    if(this.TotalPageSize>6){
+      this.IsNavButtonVisible = false;
+    } else {
+      this.IsNavButtonVisible = true;
+    }
   }
   @HostListener('mouseout') onHout() {
     this.IsNavButtonVisible = true;
   }
-  public IsNavButtonVisible: boolean = false;
-  public imageHolder: Array<number> = [1, 2, 3, 4, 5, 6]
-  // @ViewChild('widgetsContent', { read: ElementRef }) public widgetsContent: ElementRef<any>;
-
   @Input("Department") set __department(value: Department) {
     if (value) {
       this.Department = value;
       this.SearchByDepartmentId();
     }
-
   }
-  constructor(private museumService: MuseumService, private modalService: BsModalService) { }
+  constructor(private museumService: MuseumService, private modalService: BsModalService) {
+
+    this.loading$ = new Subject();
+   }
 
   ngOnInit(): void {
+    this.Subscribes.push(
+      this.loading$.subscribe( (result:boolean) => {
+          console.log("boolean:",result);
+          this.loading = result;
+      }),
+      this.museumService.QuerySearch.subscribe( (query:string) => {
+        this.skipRows = 0;
+        this.takeRows = 6;
+        this.TotalPageSize = 0;
+        this.page = 1;
+        this.SearchByDepartmentId(query)
+      })
+    )
   }
 
-  SearchByDepartmentId() {
+  SearchByDepartmentId(query:string = null) {
     this.loading = true;
+    this.NoDataAvailable = false;
+    this.Details = [];
     const { departmentId, displayName } = this.Department;
-    const departmentById: Observable<HttpEvent<any>> = this.museumService.GetDepartmentById(displayName, departmentId);
+    let __query = displayName;
+    if((query !== null) && (query !== '')){
+      __query = query;
+    }
+    const departmentById: Observable<HttpEvent<any>> = this.museumService.GetDepartmentById(__query, departmentId);
     departmentById
       .subscribe(data => {
         if (data.type === HttpEventType.DownloadProgress) {
         } else if (data.type === HttpEventType.Response) {
           const __objectIds = <ObjectIds>data.body;
           this.TotalPageSize = __objectIds.total;
-          this.museumService.StoreObjectIdsDictonary(departmentId, __objectIds.objectIDs)
-          this.ObjectIds = __objectIds.objectIDs.slice(this.skipRows, this.takeRows);
+          if(this.TotalPageSize === 0){
+            this.NoDataAvailable = true;
+            this.loading = false;
+            return false;
+          }
+          this.museumService.StoreObjectIdsDictonary(departmentId, __objectIds.objectIDs);
+          if(this.TotalPageSize>6){
+          } else {
+            this.takeRows = this.TotalPageSize;
+          }
+          this.ObjectIds = __objectIds.objectIDs.slice(this.skipRows,this.takeRows);
           this.forkJoinRequest()
         }
       }, error => {
@@ -84,22 +119,32 @@ export class DepartmentComponent implements OnInit {
     if (this.page < this.TotalPageSize) {
       this.page += 1;
     }
-    this.loading = true;
     this.onPageRequest();
   }
   onPrevRecord() {
     if (this.page > 1) {
       this.page -= 1;
     }
-    this.loading = true;
     this.onPageRequest();
   }
   private onPageRequest() {
-    this.skipRows = this.page * PAGE_SIZE;
+    this.loading$.next(true);
+    this.skipRows = (this.page-1) * PAGE_SIZE;
     this.takeRows = PAGE_SIZE;
     const { departmentId } = this.Department;
-    this.ObjectIds = this.museumService.GetObjectIdsDepartment(departmentId, this.skipRows, this.takeRows);
-    this.forkJoinRequest()
+    if(this.skipRows > this.TotalPageSize){
+      this.IsNavButtonVisible = false;
+      this.skipRows = this.TotalPageSize;
+      const cal = this.skipRows - this.TotalPageSize ;
+      this.takeRows = (cal === 0) ? 1 : cal;
+    }
+    this.ObjectIds = this.museumService.GetObjectIdsDepartment(departmentId, this.skipRows,this.takeRows );
+    if(this.ObjectIds.length > 0){
+      this.forkJoinRequest();
+    }
+    if(this.ObjectIds.length === 0 ){
+      this.loading$.next(false);
+    }
   }
 
   private forkJoinRequest() {
@@ -113,9 +158,14 @@ export class DepartmentComponent implements OnInit {
         const { artistAlphaSort, artistDisplayName, artistPrefix, artistDisplayBio, primaryImage, primaryImageSmall, title, objectName, objectDate, city, culture } = object.body;
         const objectDetails: IObjectDetails = new ObjectDetails(title, objectName, artistAlphaSort, artistDisplayName, artistPrefix, artistDisplayBio, primaryImage, primaryImageSmall, objectDate, city, culture);
         this.Details.push(objectDetails);
-        this.loading = false;
       });
+      this.loading$.next(false);
     })
   }
  
+  ngOnDestroy(){
+    this.Subscribes.forEach( sub => {
+      sub.unsubcribe();
+    })
+  }
 }

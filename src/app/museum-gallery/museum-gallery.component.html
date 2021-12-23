@@ -1,5 +1,5 @@
 <div class="d-flex justify-content-end">
-    <input type="text" placeholder="Search">
+    <input type="text" placeholder="Search" (keyup.enter)="SearchInput($event.target)">
 </div>
 <div *ngFor="let department of DepartmentList">
     <app-department [Department]="department"></app-department>

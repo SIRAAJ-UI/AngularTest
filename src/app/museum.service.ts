@@ -1,6 +1,6 @@
 import { HttpClient, HttpEvent, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Department } from './client/model';
 import { AccountAPIUrls } from './global.urls';
 
@@ -10,7 +10,9 @@ import { AccountAPIUrls } from './global.urls';
 export class MuseumService {
 
   public ObjectsIds:Array<Array<number>> = [];
+  private __SearchQuery: Subject<string>;
   constructor(private httpClient: HttpClient) {
+    this.__SearchQuery = new Subject();
   }
   GetAllDepartments(): Observable<HttpEvent<Array<Department>>> {
     const getRequest: HttpRequest<any> = new HttpRequest('GET', AccountAPIUrls.GetAllDepartments);
@@ -24,11 +26,20 @@ export class MuseumService {
     this.ObjectsIds[departmentId] = objectList;
   }
   GetObjectIdsDepartment(departmentId:number,skipRows:number,takeRows:number){
+    console.log(this.ObjectsIds[departmentId])
     return [...this.ObjectsIds[departmentId]].splice(skipRows,takeRows);
   }
   GetObjectDetails(objectId: number){
-    // https://collectionapi.metmuseum.org/public/collection/v1/objects/310537
     const getRequest: HttpRequest<any> = new HttpRequest('GET', `${AccountAPIUrls.GetObjectDetails}/${objectId}`);
     return this.httpClient.request(getRequest);
+  }
+
+  
+
+  SearchQuery(query: string){
+    this.__SearchQuery.next(query);
+  }
+  get QuerySearch():Observable<string> {
+    return this.__SearchQuery.asObservable();
   }
 }
