@@ -20,7 +20,7 @@ export class ObjectDetails {
     // primaryImageSmall: "https://images.metmuseum.org/CRDImages/ad/web-large/192572.jpg"
     // title: "Chandelier"
     // objectName: "Chandelier"
-    constructor(public title: string,public objectName: string,public artistAlphaSort: string,public artistDisplayName: string,public artistPrefix: string,public artistDisplayBio: string,public primaryImage: string,public primaryImageSmall: string) {
+    constructor(public title: string,public objectName: string,public artistAlphaSort: string,public artistDisplayName: string,public artistPrefix: string,public artistDisplayBio: string,public primaryImage: string,public primaryImageSmall: string,public objectDate: string,public city: string,public culture: string) {
         
     }
 }

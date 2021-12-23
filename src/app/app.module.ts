@@ -9,6 +9,9 @@ import { DepartmentComponent } from './department/department.component';
 import { LoadingBarRouterModule } from '@ngx-loading-bar/router';
 import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client';
 import { LOADING_BAR_CONFIG } from '@ngx-loading-bar/core';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ModalModule } from 'ngx-bootstrap/modal';
+
 
 @NgModule({
   declarations: [
@@ -20,6 +23,8 @@ import { LOADING_BAR_CONFIG } from '@ngx-loading-bar/core';
   imports: [
     BrowserModule,
     HttpClientModule,
+    NgbModule,
+    ModalModule.forRoot(),
     LoadingBarRouterModule,
     LoadingBarHttpClientModule,
     AppRoutingModule

@@ -1,12 +1,90 @@
+.gallery-container {
+    position: relative;
+    width: 100%;
+    .nav-button{
+        position: absolute;
+        width: 100%;
+        top:60px;
+        .prev-button{
+            background-color: #fff;
+            border: none;
+            box-shadow: 2px 0px 10px 2px rgb(0 0 0 / 20%);
+            height: 100px;
+            font-size: 25px;
+            text-align: center;
+            outline: none;
+        }
+        .next-button{
+            background-color: #fff;
+            border: none;
+            box-shadow: 2px 0px 10px 2px rgb(0 0 0 / 20%);
+            height: 100px;
+            font-size: 25px;
+            text-align: center;
+            outline: none;
+        }
+    }
+}
 .image-card {
     width:190px;
     height: 240px;
-    border: 1px solid black;
+    border: 1px solid rgb(228, 225, 225);
+    background-color: #f3f3eca6;
+    border-radius: 10px;
     padding:10px;
+    &:hover{
+    border: 1px solid rgb(175, 171, 171);
+    }
 }
 
-img {
+.details-container{
+    width: 100%;
+    overflow-x: auto;
+}
+
+img.primaryImageSmall {
     width:170px;
     height:230px;
     object-fit: contain;
   }
+
+  img.primaryImage {
+    width:400px;
+    height:400px;
+    object-fit: contain;
+  }
+
+  @keyframes dashboard-popup-animation1 {
+    from {opacity:0;}
+    to {opacity: 1;}
+  }
+.popup2 {
+    border-radius: 11px;
+    background-color: white;
+    padding:10px;
+    animation-name: dashboard-popup-animation1;
+    animation-timing-function: ease;
+    animation-duration: 1.2s;
+    .close-btn {
+        float: right;
+        font-size: 20px;
+        font-weight: 400;
+        line-height: 1;
+        font-family: arial;
+        color: #000;
+        text-shadow: 0 1px 0 #fff;
+        cursor: pointer;
+        opacity: .5;
+        &:hover {
+            opacity: 1;
+        }
+}
+}
+
+.text-ellipse {
+    white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 200px;
+
+}

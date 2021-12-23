@@ -1,17 +1,56 @@
-<h4>{{Department.displayName}}</h4>
-<!-- <div *ngIf="isScrollable && isScrollableView" class="scroll-window-container">
-    <div role="button" class="scroll-left d-flex justify-content-center align-items-center" (click)="scrollLeft()">&#60;</div>
-    <div role="button" class="scroll-right d-flex justify-content-center align-items-center" (click)="scrollRight()">&#62;</div>
-</div> -->
-<button (click)="onPrevRecord()">Previous</button>
-<button (click)="onNextRecord()">Next</button>
-<div #widgetsContent class="d-flex">
-    <ng-container *ngFor="let record of Details" >
-        <div class="d-flex flex-column">
-        <div class="image-card mr-2">
-            <img [src]="record.primaryImageSmall" alt="">
+<ng-template #ImageView>
+    <div class="popup2">
+        <div class="d-flex justify-content-between">
+            <h5 class="h5">Preview</h5>
+            <div class="close-btn" (click)="modalRef.hide()">X</div>
         </div>
-        <div>{{record.title}}</div>
+        <hr class="m-0" />
+        <div class="p-4 d-flex">
+            <div class="d-flex flex-column justify-content-center">
+                <h5 class="h5" title="Title: {{previewDetails?.title}}">{{previewDetails?.title}}</h5>
+                <h5 class="h5 text-muted" title="Date Created: {{previewDetails?.objectDate}}">
+                    {{previewDetails?.objectDate}}</h5>
+                <a>
+                    <span title="culture: {{previewDetails?.culture}}">{{previewDetails?.culture}} </span> <span
+                        title="Artist Name: {{previewDetails?.artistDisplayName}}">{{previewDetails?.artistDisplayName}}</span>
+                    <span title="City : {{previewDetails?.city}}"></span>{{previewDetails?.city}}
+                </a>
+            </div>
+            <div style="width:100%" class="d-flex justify-content-center">
+                <img class="primaryImage" [src]="previewDetails?.primaryImage"
+                    onerror="this.src='assets/no-image-found.jpg';">
+            </div>
+        </div>
     </div>
+</ng-template>
+
+<h4>{{Department.displayName}}</h4>
+<div class="gallery-container">
+    <div class="nav-button d-flex justify-content-between" [style.visibility]="IsNavButtonVisible? 'hidden': 'visible'">
+        <div class="pull-left">
+            <button role="button" class="btn prev-button " (click)="onPrevRecord()"><</button>
+        </div>
+        <div class="pull-right">
+            <button class="btn next-button" (click)="onNextRecord()">></button>
+        </div>
+    </div>
+    <ng-container *ngIf="loading === true">
+        <div  class="ph-item">
+            <div class="d-flex flex-column">
+                <div style="height: 180px;" class="ph-picture"></div>
+            </div>
+        </div>
     </ng-container>
+    <div class="details-container d-flex justify-content-center">
+        <ng-container *ngFor="let record of Details">
+            <div class="d-flex flex-column">
+                <div class="image-card mr-2">
+                    <img role="button" class="primaryImageSmall" [src]="record?.primaryImageSmall"
+                        onerror="this.src='assets/no-image-found.jpg';" alt="">
+                </div>
+                <div class="btn btn-link text-ellipse" title="{{record?.title}}" (click)="openImageWindow(record)">
+                    {{record?.title}}</div>
+            </div>
+        </ng-container>
+    </div>
 </div>

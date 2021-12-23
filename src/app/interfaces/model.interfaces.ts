@@ -14,5 +14,8 @@ export interface IObjectDetails {
     primaryImageSmall: string;
     title: string;
     objectName: string;
+    objectDate: string;
+    city: string;
+    culture?: string;
 }
 

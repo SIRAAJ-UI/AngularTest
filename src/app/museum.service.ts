@@ -24,7 +24,7 @@ export class MuseumService {
     this.ObjectsIds[departmentId] = objectList;
   }
   GetObjectIdsDepartment(departmentId:number,skipRows:number,takeRows:number){
-    return this.ObjectsIds[departmentId].splice(skipRows,takeRows);
+    return [...this.ObjectsIds[departmentId]].splice(skipRows,takeRows);
   }
   GetObjectDetails(objectId: number){
     // https://collectionapi.metmuseum.org/public/collection/v1/objects/310537
