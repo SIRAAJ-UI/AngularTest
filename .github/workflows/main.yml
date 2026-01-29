@@ -19,7 +19,10 @@ jobs:
       # Step 2: Checkout repository code
       - name: Checkout code
         uses: actions/checkout@v4
-      - run: echo 'Checkout repository successfully'
+      - run: |
+          echo 'Checkout repository successfully'
+          npm install            # Install packages
+          npm run build          # Build Angular app
           
           
           
