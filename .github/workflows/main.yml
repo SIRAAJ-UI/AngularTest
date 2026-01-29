@@ -16,6 +16,10 @@ jobs:
       # Step 1: Checkout repository code
       - run: |
           echo "Hello World!"
-          echo "Installing node js"
-          npm install node@latest
-          echo "Successfully completed node js"
+      # Step 2: Checkout repository code
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - run: echo 'Checkout repository successfully'
+          
+          
+          
