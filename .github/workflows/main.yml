@@ -17,3 +17,5 @@ jobs:
       - run: |
           echo "Hello World!"
           echo "Installing node js"
+          npm install node@latest
+          echo "Successfully completed node js"
