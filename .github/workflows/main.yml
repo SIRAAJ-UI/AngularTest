@@ -23,6 +23,11 @@ jobs:
           echo 'Checkout repository successfully'
           npm install            # Install packages
           npm run build          # Build Angular app
+
+      # Step 3: Print build file path
+      - name: List dist folder files
+        run: ls -R dist/
+
           
           
           
